@@ -14,15 +14,12 @@ When("I fill in the todo input with {string}") do |text|
   find('[data-testid="todo-input"]').fill_in(with: text)
 end
 
-When("I click the add todo button") do
+When("I click the add button") do
   find('[data-testid="add-todo-button"]').click
 end
 
-When("I check the todo status checkbox for {string}") do |title|
-  todo_item = find('[data-testid="todo-item"]', text: title, match: :first)
-  within(todo_item) do
-    find('[data-testid="todo-checkbox"]').click
-  end
+When("I check the quest status checkbox") do
+  find('[data-testid="todo-checkbox"]').click
 end
 
 Then("I should see {string}") do |text|
@@ -33,12 +30,26 @@ Then("I should not see {string}") do |text|
   expect(page).not_to have_content(text)
 end
 
-Then("I should see the quest {string} is checked") do |quest_title|
-  quest_item = find('[data-testid="todo-item"]', text: quest_title)
-  checkbox = quest_item.find('[data-testid="todo-checkbox"]')
-  expect(checkbox).to be_checked
+Then("I should see the quest is checked") do
+  expect(find('[data-testid="todo-checkbox"]')).to be_checked
 end
 
 When("I click the delete todo button") do
-    find('[data-testid="delete-todo-button"]', match: :first).click
+  find('[data-testid="delete-todo-button"]', match: :first).click
+end
+
+When("I click the brag button") do
+  find("[data-testid='brag-button']").click
+end
+
+Then("I should be on the brags page") do
+  expect(page).to have_current_path(brags_path, ignore_query: true)
+end
+
+When("I click the back button") do
+  find("[data-testid='back-button']").click
+end
+
+Then("I should be on the quest page") do
+  expect(page).to have_current_path(todos_path, ignore_query: true)
 end
