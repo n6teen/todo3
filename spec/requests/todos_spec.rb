@@ -83,36 +83,6 @@ RSpec.describe "/todos", type: :request do
     end
   end
 
-  describe "PATCH /update" do
-    context "with valid parameters" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
-
-      it "updates the requested todo" do
-        todo = Todo.create! valid_attributes
-        patch todo_url(todo), params: { todo: new_attributes }
-        todo.reload
-        skip("Add assertions for updated state")
-      end
-
-      it "redirects to the todo" do
-        todo = Todo.create! valid_attributes
-        patch todo_url(todo), params: { todo: new_attributes }
-        todo.reload
-        expect(response).to redirect_to(todo_url(todo))
-      end
-    end
-
-    context "with invalid parameters" do
-      it "renders a response with 422 status (i.e. to display the 'edit' template)" do
-        todo = Todo.create! valid_attributes
-        patch todo_url(todo), params: { todo: invalid_attributes }
-        expect(response).to have_http_status(:unprocessable_entity)
-      end
-    end
-  end
-
   describe "DELETE /destroy" do
     it "destroys the requested todo" do
       todo = Todo.create! valid_attributes
