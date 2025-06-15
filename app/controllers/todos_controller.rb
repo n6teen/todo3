@@ -21,15 +21,22 @@ class TodosController < ApplicationController
 
   # POST /todos or /todos.json
   def create
-    @todo = Todo.new(todo_params)
-
+    @todo = Todo.new(todo_params.merge(status: false))
     respond_to do |format|
       if @todo.save
-        format.html { redirect_to @todo, notice: "Todo was successfully created." }
-        format.json { render :show, status: :created, location: @todo }
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.append("todos-list", partial: "todo", locals: { todo: @todo }),
+            turbo_stream.update("empty-state", partial: "empty_state", locals: { todos: Todo.all }),
+            turbo_stream.replace("new_todo", partial: "form", locals: { todo: Todo.new })
+          ]
+        end
+        format.html { redirect_to todo_url(@todo), notice: "Quest was successfully created." }
       else
+        format.turbo_stream {
+          render turbo_stream: turbo_stream.replace("new_todo", partial: "form", locals: { todo: Todo.new })
+        }
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @todo.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -38,22 +45,19 @@ class TodosController < ApplicationController
   def update
     respond_to do |format|
       if @todo.update(todo_params)
-        format.html { redirect_to @todo, notice: "Todo was successfully updated." }
-        format.json { render :show, status: :ok, location: @todo }
+        format.turbo_stream { render turbo_stream: turbo_stream.replace(@todo) }
+        format.html { redirect_to root_path, notice: "Quest updated successfully." }
       else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @todo.errors, status: :unprocessable_entity }
+        format.html { render :edit }
       end
     end
   end
 
-  # DELETE /todos/1 or /todos/1.json
   def destroy
     @todo.destroy!
-
     respond_to do |format|
-      format.html { redirect_to todos_path, status: :see_other, notice: "Todo was successfully destroyed." }
-      format.json { head :no_content }
+      format.turbo_stream { render turbo_stream: turbo_stream.remove("#{helpers.dom_id(@todo)}") }
+      format.html { redirect_to todos_path, status: :see_other, notice: "Quest was successfully destroyed." }
     end
   end
 
