@@ -12,7 +12,6 @@ RSpec.describe "todos/new", type: :view do
     render
 
     assert_select "form[action=?][method=?]", todos_path, "post" do
-
       assert_select "input[name=?]", "todo[title]"
 
       assert_select "input[name=?]", "todo[status]"
