@@ -42,14 +42,12 @@
   </div>
 
     <div class="text-center mb-8">    
-      <turbo-frame id="new_todo" class="block">
+      <div id="new_todo" class="block">
         <div>
           <%= render "form", todo: Todo.new %>
         </div>
-      </turbo-frame>
+      </div>
     </div>
-
-    <%= turbo_stream_from "todos" %>
     
     <div class="space-y-2">
       <ul id="todos-list" class="space-y-2" data-testid="todo-list">
@@ -57,7 +55,7 @@
       </ul>
     </div>
 
-    <turbo-frame id="empty-state">
+    <div id="empty-state">
       <% if @todos.empty? %>
         <div class="text-center py-12" data-testid="empty-state">
           <div class="text-gray-400 mb-4">
@@ -69,6 +67,6 @@
           <p class="text-gray-500">Add your first quest item above to get started!</p>
         </div>
       <% end %>
-    </turbo-frame>
+    </div>
   </div>
 </div>
